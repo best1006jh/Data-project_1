@@ -1,1 +1,74 @@
+import pansdas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
+df = pd.read_csv('"C:\Users\u1462346\Downloads\BMW_Car_Sales_Classification.csv"/BMW_Car_Sales_Classification.csv')
+print(df.head())
+
+
+# 열 이름 확인
+print(df.columns)
+
+# 데이터 요약 통계
+print(df.describe(include='all'))
+
+# 데이터 타입 확인
+print(df.dtypes)
+
+# 데이터 크기 확인
+print("Number of rows:", df.shape[0])
+print("Number of columns:", df.shape[1])
+
+  # 각 열별 결측치 개수 확인
+  print(df.isnull().sum())
+  
+  # 예시: 특정 열에 결측치가 있으면 삭제 또는 대체
+  df = df.dropna()  # 단순 삭제 (주의: 데이터 손실 있음)
+  
+  # 또는 평균/중앙값으로 대체
+  df['Mileage_KM'] = df['Mileage_KM'].fillna(df['Mileage_KM'].median())
+
+# 중복 행 확인
+print("중복 행 개수:", df.duplicated().sum())
+
+# 중복 행 제거
+df = df.drop_duplicates()
+
+# Year, Sales_Volume 등을 정수형으로 보장
+df['Year'] = df['Year'].astype(int)
+df['Engine_Size_L'] = df['Engine_Size_L'].astype(float)
+df['Mileage_KM'] = df['Mileage_KM'].astype(float)
+df['Price_USD'] = df['Price_USD'].astype(float)
+df['Sales_Volume'] = df['Sales_Volume'].astype(int)
+
+# 모든 문자열 컬럼을 소문자로 통일 + 양쪽 공백 제거
+for col in ['Model', 'Region', 'Color', 'Fuel_Type', 'Transmission', 'Sales_Classification']:
+    df[col] = df[col].astype(str).str.strip().str.lower()
+
+# Mileage_KM과 Price_USD에 대한 이상치 시각화
+plt.figure(figsize=(12, 5))
+sns.boxplot(data=df[['Mileage_KM', 'Price_USD']])
+plt.title("주행 거리 및 가격의 이상치 분포")
+plt.show()
+
+#IQR (Interquartile Range)
+def remove_outliers_iqr(data, column):
+    Q1 = data[column].quantile(0.25)
+    Q3 = data[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    
+    cleaned_data = data[(data[column] >= lower_bound) & (data[column] <= upper_bound)]
+    
+    print(f"{column} 컬럼에서 제거된 이상치 수: {len(data) - len(cleaned_data)}개")
+    return cleaned_data
+
+df = remove_outliers_iqr(df, 'Mileage_KM')
+df = remove_outliers_iqr(df, 'Price_USD')
+
+# 다시 시각화하여 이상치가 제거되었는지 확인
+plt.figure(figsize=(12, 5))
+sns.boxplot(data=df[['Mileage_KM', 'Price_USD']])
+plt.title("이상치 제거 후 주행 거리 및 가격 분포")
+plt.show()
