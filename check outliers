@@ -1,1 +1,27 @@
+# Mileage_KM과 Price_USD에 대한 이상치 시각화
+plt.figure(figsize=(12, 5))
+sns.boxplot(data=df[['Mileage_KM', 'Price_USD']])
+plt.title("주행 거리 및 가격의 이상치 분포")
+plt.show()
 
+#IQR (Interquartile Range)
+def remove_outliers_iqr(data, column):
+    Q1 = data[column].quantile(0.25)
+    Q3 = data[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    
+    cleaned_data = data[(data[column] >= lower_bound) & (data[column] <= upper_bound)]
+    
+    print(f"{column} 컬럼에서 제거된 이상치 수: {len(data) - len(cleaned_data)}개")
+    return cleaned_data
+
+df = remove_outliers_iqr(df, 'Mileage_KM')
+df = remove_outliers_iqr(df, 'Price_USD')
+
+# 다시 시각화하여 이상치가 제거되었는지 확인
+plt.figure(figsize=(12, 5))
+sns.boxplot(data=df[['Mileage_KM', 'Price_USD']])
+plt.title("이상치 제거 후 주행 거리 및 가격 분포")
+plt.show()
