@@ -19,14 +19,14 @@ print(df.dtypes)
 print("Number of rows:", df.shape[0])
 print("Number of columns:", df.shape[1])
 
-  # 각 열별 결측치 개수 확인
-  print(df.isnull().sum())
+# 각 열별 결측치 개수 확인
+print(df.isnull().sum())
   
-  # 예시: 특정 열에 결측치가 있으면 삭제 또는 대체
-  df = df.dropna()  # 단순 삭제 (주의: 데이터 손실 있음)
+# 예시: 특정 열에 결측치가 있으면 삭제 또는 대체
+df = df.dropna()  # 단순 삭제 (주의: 데이터 손실 있음)
   
-  # 또는 평균/중앙값으로 대체
-  df['Mileage_KM'] = df['Mileage_KM'].fillna(df['Mileage_KM'].median())
+# 또는 평균/중앙값으로 대체
+df['Mileage_KM'] = df['Mileage_KM'].fillna(df['Mileage_KM'].median())
 
 # 중복 행 확인
 print("중복 행 개수:", df.duplicated().sum())
