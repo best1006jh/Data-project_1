@@ -30,7 +30,6 @@ df['Sales_Volume'] = df['Sales_Volume'].astype(int)
 for col in ['Model', 'Region', 'Color', 'Fuel_Type', 'Transmission', 'Sales_Classification']:
     df[col] = df[col].astype(str).str.strip().str.lower()
 
-# Mileage_KM과 Price_USD에 대한 이상치 시각화
 plt.figure(figsize=(12, 5))
 sns.boxplot(data=df[['Mileage_KM', 'Price_USD']])
 plt.title("Ouliers between Mileage_KM AND Price_USD")
@@ -61,7 +60,7 @@ plt.show()
 
 
 for col in ['Fuel_Type', 'Transmission', 'Region', 'Sales_Classification']:
-    print(f"{col} 고유값:", df[col].unique())
+    print(f"{col} eigenvalue:", df[col].unique())
 
 print(df['Year'].min(), "-", df['Year'].max())
 
