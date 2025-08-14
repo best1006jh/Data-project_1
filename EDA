@@ -1,0 +1,17 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df = pd.read_csv("data/processed/cleaned_car_sales.csv")
+
+# Annual avg price
+df.groupby("year")["price_usd"].mean().plot(kind="line", title="연도별 평균 가격", figsize=(8, 4))
+plt.savefig("reports/figures/avg_price_by_year.png")
+
+# Total sales per location
+plt.figure(figsize=(10,6))
+sns.barplot(data=df, x="region", y="sales_volume", estimator=sum)
+plt.xticks(rotation=45)
+plt.title("지역별 총 판매량")
+plt.savefig("reports/figures/sales_by_region.png")
+plt.close()
