@@ -5,50 +5,35 @@ import seaborn as sns
 df = pd.read_csv('"C:\Users\u1462346\Downloads\BMW_Car_Sales_Classification.csv"/BMW_Car_Sales_Classification.csv')
 print(df.head())
 
-
-# 열 이름 확인
 print(df.columns)
 
-# 데이터 요약 통계
 print(df.describe(include='all'))
 
-# 데이터 타입 확인
 print(df.dtypes)
 
-# 데이터 크기 확인
 print("Number of rows:", df.shape[0])
 print("Number of columns:", df.shape[1])
 
-# 각 열별 결측치 개수 확인
 print(df.isnull().sum())
-  
-# 예시: 특정 열에 결측치가 있으면 삭제 또는 대체
-df = df.dropna()  # 단순 삭제 (주의: 데이터 손실 있음)
-  
-# 또는 평균/중앙값으로 대체
+df = df.dropna()
 df['Mileage_KM'] = df['Mileage_KM'].fillna(df['Mileage_KM'].median())
 
-# 중복 행 확인
-print("중복 행 개수:", df.duplicated().sum())
-
-# 중복 행 제거
+print("Number of duplicates:", df.duplicated().sum())
 df = df.drop_duplicates()
 
-# Year, Sales_Volume 등을 정수형으로 보장
 df['Year'] = df['Year'].astype(int)
 df['Engine_Size_L'] = df['Engine_Size_L'].astype(float)
 df['Mileage_KM'] = df['Mileage_KM'].astype(float)
 df['Price_USD'] = df['Price_USD'].astype(float)
 df['Sales_Volume'] = df['Sales_Volume'].astype(int)
 
-# 모든 문자열 컬럼을 소문자로 통일 + 양쪽 공백 제거
 for col in ['Model', 'Region', 'Color', 'Fuel_Type', 'Transmission', 'Sales_Classification']:
     df[col] = df[col].astype(str).str.strip().str.lower()
 
 # Mileage_KM과 Price_USD에 대한 이상치 시각화
 plt.figure(figsize=(12, 5))
 sns.boxplot(data=df[['Mileage_KM', 'Price_USD']])
-plt.title("주행 거리 및 가격의 이상치 분포")
+plt.title("Ouliers between Mileage_KM AND Price_USD")
 plt.show()
 
 #IQR (Interquartile Range)
@@ -61,40 +46,35 @@ def remove_outliers_iqr(data, column):
     
     cleaned_data = data[(data[column] >= lower_bound) & (data[column] <= upper_bound)]
     
-    print(f"{column} 컬럼에서 제거된 이상치 수: {len(data) - len(cleaned_data)}개")
+    print(f"{column} eliminated ouliers: {len(data) - len(cleaned_data)}")
     return cleaned_data
 
 df = remove_outliers_iqr(df, 'Mileage_KM')
 df = remove_outliers_iqr(df, 'Price_USD')
 
-# 다시 시각화하여 이상치가 제거되었는지 확인
+# check
 plt.figure(figsize=(12, 5))
 sns.boxplot(data=df[['Mileage_KM', 'Price_USD']])
-plt.title("이상치 제거 후 주행 거리 및 가격 분포")
+plt.title("Distribution of mileage and price after removing outliers")
 plt.show()
 
-# 고유값 목록 확인
+
+
 for col in ['Fuel_Type', 'Transmission', 'Region', 'Sales_Classification']:
     print(f"{col} 고유값:", df[col].unique())
 
-# 연식 범위 확인
 print(df['Year'].min(), "-", df['Year'].max())
 
-# 이상한 연도 제거 (예: 2000년 이전, 2025년 이후)
 df = df[(df['Year'] >= 2000) & (df['Year'] <= 2025)]
 
-# 배기량 비정상 확인
 print(df['Engine_Size_L'].describe())
 
-# 필요하다면, 배기량이 0 이하이거나 10L 이상 같은 비정상 값도 제거할 수 있습니다.
 df = df[(df['Engine_Size_L'] > 0) & (df['Engine_Size_L'] < 10)]
 
-# 공백 제거 및 소문자 통일
 df.columns = df.columns.str.strip().str.lower()
 
-# 예: sales_classification → sales_classification 등으로 통일
 print(df.columns)
 
-# 정제된 데이터를 새 파일로 저장
+# store as a cleaned dataset
 df.to_csv("cleaned_car_sales.csv", index=False)
 
