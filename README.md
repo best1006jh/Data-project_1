@@ -1,14 +1,18 @@
-BMW Car Sales Data Cleaning Project
+BMW Car Sales Data Cleaning & EDA Project
 
 Project Overview
- - This project focused on cleaning and preparing raw BMW car sales data. The dataset contained missing values, inconsistencies, and formatting issues. The primary goal was to produce a clean and reliable dataset that could be used for future analysis.
+ - This project focuses on cleaning and preparing BMW car sales data and performing exploratory data analysis (EDA) to generate meaningful insights. The dataset initially contained missing values, inconsistencies, and outliers, which were addressed in the ETL process. EDA was conducted to visualize trends and distribution patterns across key variables.
 
-Key Tasks
- - Imported raw CSV data and inspected dataset structure.
- - Identified and handled missing values.
- - Corrected inconsistent entries in categorical variables (e.g., car models, regions).
- - Standardized numerical fields such as price and mileage.
- - Validated the cleaned dataset through summary statistics and basic visual checks.
+Project Structure
+1. ETL.py: Data cleaning and preprocessing module
+ - Handled missing values, duplicates, and inconsistent formatting.
+ - Standardized numerical fields (e.g., price, mileage, engine size) and categorical variables (e.g., model, region, fuel type).
+ - Detected and removed outliers using IQR and verified data quality through boxplots.
 
-Deliverable
- - A cleaned, structured dataset ready for further analytical or modeling work.
+2. EDA.py: Exploratory data analysis
+ - Plotted annual average price trends.
+ - Visualized total sales by region using bar plots.
+ - Saved figures for reporting purposes.
+
+Key Deliverables
+ - Cleaned, structured dataset ready for analysis or modeling
